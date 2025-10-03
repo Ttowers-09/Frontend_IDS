@@ -136,6 +136,7 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
+  clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
 }
 
 .welcome-section::before {
@@ -145,9 +146,27 @@
   left: -20%;
   width: 120%;
   height: 200%;
-  background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%);
+  background: linear-gradient(45deg, 
+    transparent 40%, 
+    rgba(93, 50, 153, 0.6) 48%,
+    rgba(138, 77, 201, 0.8) 50%,
+    rgba(93, 50, 153, 0.6) 52%,
+    transparent 60%
+  );
   transform: rotate(-15deg);
   pointer-events: none;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0.3;
+    transform: rotate(-15deg) translateX(-100%);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(-15deg) translateX(100%);
+  }
 }
 
 .welcome-content {
