@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@tailwindcss/typography": "^0.5.19",
+    "autoprefixer": "^10.4.21",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.23.22",
+    "lucide-react": "^0.545.0",
+    "postcss": "^8.5.6",
+    "recharts": "^3.2.1",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.1.14"
+  }
+}
