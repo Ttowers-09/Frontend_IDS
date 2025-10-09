@@ -17,6 +17,7 @@ import {
   Lock,
   Database
 } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 import UsersPage from './UsersPage';
 import AnalyticsPage from './AnalyticsPage';
 
@@ -113,6 +114,7 @@ const Dashboard = () => {
                 </p>
               </div>
               <div className="flex items-center space-x-4">
+                <ThemeToggle />
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
