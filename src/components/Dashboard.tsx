@@ -16,20 +16,30 @@ import {
   Eye,
   Lock,
   Database,
-  Video
+  Video,
+  ArrowLeft
 } from 'lucide-react';
 import UsersPage from './UsersPage';
 import AnalyticsPage from './AnalyticsPage';
 
 interface DashboardProps {
   onLeaveCall: () => void;
+  onBackToCall: () => void;
   callId: string;
+  currentUser?: {
+    id: string;
+    name: string;
+    isHost: boolean;
+  };
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ onLeaveCall, callId }) => {
-  const [activeSection, setActiveSection] = useState('dashboard');
+const Dashboard: React.FC<DashboardProps> = ({ onLeaveCall, onBackToCall, callId, currentUser }) => {
+  // Si no es host, ir directamente a Analytics
+  const [activeSection, setActiveSection] = useState(
+    currentUser?.isHost ? 'dashboard' : 'analytics'
+  );
 
-  const navItems = [
+  const allNavItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Shield },
     { id: 'users', label: 'Usuarios', icon: Users },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
@@ -38,6 +48,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onLeaveCall, callId }) => {
     { id: 'logs', label: 'Logs', icon: FileText },
     { id: 'settings', label: 'Configuración', icon: Settings },
   ];
+
+  // Filtrar nav items según el rol del usuario
+  const navItems = currentUser?.isHost 
+    ? allNavItems 
+    : allNavItems.filter(item => item.id === 'analytics');
 
   const renderMainContent = () => {
     switch (activeSection) {
@@ -117,7 +132,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onLeaveCall, callId }) => {
                 <p className="text-gray-400 text-sm">
                   {activeSection === 'dashboard' && 'Centro de control de seguridad'}
                   {activeSection === 'users' && 'Gestión de usuarios y permisos'}
-                  {activeSection === 'analytics' && 'Análisis y métricas de seguridad'}
+                  {activeSection === 'analytics' && (
+                    currentUser?.isHost 
+                      ? 'Análisis y métricas de seguridad' 
+                      : 'Vista colaborativa de análisis en tiempo real'
+                  )}
                   {activeSection === 'alerts' && 'Alertas y notificaciones'}
                   {activeSection === 'logs' && 'Registros del sistema'}
                   {activeSection === 'settings' && 'Configuración del sistema'}
@@ -129,11 +148,25 @@ const Dashboard: React.FC<DashboardProps> = ({ onLeaveCall, callId }) => {
                 <div className="flex items-center gap-2 px-3 py-2 bg-green-500/20 border border-green-500/30 rounded-lg">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="text-green-300 text-sm font-medium">En llamada: {callId.substring(0, 8)}...</span>
+                  
+                  {/* Botón para regresar a la llamada */}
+                  <motion.button
+                    onClick={onBackToCall}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="ml-2 p-1 hover:bg-blue-500/20 rounded text-blue-400 hover:text-blue-300 transition-colors"
+                    title="Regresar a la llamada"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                  </motion.button>
+                  
+                  {/* Botón para salir de la llamada */}
                   <motion.button
                     onClick={onLeaveCall}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="ml-2 p-1 hover:bg-red-500/20 rounded text-red-400 hover:text-red-300 transition-colors"
+                    className="ml-1 p-1 hover:bg-red-500/20 rounded text-red-400 hover:text-red-300 transition-colors"
+                    title="Salir de la llamada"
                   >
                     <Shield className="w-4 h-4" />
                   </motion.button>

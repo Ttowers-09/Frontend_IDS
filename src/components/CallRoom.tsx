@@ -14,19 +14,26 @@ import {
   Maximize,
   Minimize,
   Hand,
-  Smile
+  Smile,
+  BarChart3
 } from 'lucide-react';
 
 interface CallRoomProps {
   meetingId?: string;
   onLeaveCall: () => void;
   onNavigateToDashboard?: () => void;
+  currentUser?: {
+    id: string;
+    name: string;
+    isHost: boolean;
+  };
 }
 
 const CallRoom: React.FC<CallRoomProps> = ({ 
   meetingId = "room-123", 
   onLeaveCall,
-  onNavigateToDashboard 
+  onNavigateToDashboard,
+  currentUser = { id: 'default-user', name: 'Usuario', isHost: true }
 }) => {
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
@@ -336,9 +343,13 @@ const CallRoom: React.FC<CallRoomProps> = ({
               whileTap={{ scale: 0.9 }}
               onClick={onNavigateToDashboard}
               className="p-md rounded-full bg-primary-500 hover:bg-primary-600 transition-colors"
-              title="Acceder al Dashboard"
+              title={currentUser.isHost ? "Acceder al Dashboard" : "Ver Analytics"}
             >
-              <Monitor className="w-5 h-5 text-white" />
+              {currentUser.isHost ? (
+                <Monitor className="w-5 h-5 text-white" />
+              ) : (
+                <BarChart3 className="w-5 h-5 text-white" />
+              )}
             </motion.button>
           )}
 

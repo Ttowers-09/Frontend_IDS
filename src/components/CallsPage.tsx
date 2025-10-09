@@ -25,6 +25,11 @@ interface CallsPageProps {
   isInCall: boolean;
   currentCallId: string;
   onNavigateToDashboard?: () => void;
+  currentUser?: {
+    id: string;
+    name: string;
+    isHost: boolean;
+  };
 }
 
 const CallsPage: React.FC<CallsPageProps> = ({ 
@@ -32,7 +37,8 @@ const CallsPage: React.FC<CallsPageProps> = ({
   onLeaveCall, 
   isInCall, 
   currentCallId,
-  onNavigateToDashboard
+  onNavigateToDashboard,
+  currentUser
 }) => {
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
@@ -59,6 +65,7 @@ const CallsPage: React.FC<CallsPageProps> = ({
         meetingId={currentCallId} 
         onLeaveCall={onLeaveCall}
         onNavigateToDashboard={onNavigateToDashboard}
+        currentUser={currentUser}
       />
     );
   }

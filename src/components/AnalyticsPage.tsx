@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   BarChart3, 
@@ -17,14 +17,57 @@ import {
   Zap,
   Clock,
   PieChart,
-  LineChart
+  LineChart,
+  Lock,
+  Unlock
 } from 'lucide-react';
 import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart as RechartsPieChart, Pie, Cell } from 'recharts';
+import { useCollaboration } from '../contexts/CollaborationContext';
+import CollaborativeCursors from './CollaborativeCursors';
+import UserPresenceIndicator from './UserPresenceIndicator';
 
 const AnalyticsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState('24h');
   const [selectedMetric, setSelectedMetric] = useState('security');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  // Colaboración en tiempo real
+  const { updateCursor, updateUserSection, canInteract, updateAnalytics } = useCollaboration();
+
+  // Actualizar sección actual cuando se monta el componente
+  useEffect(() => {
+    updateUserSection('analytics');
+    
+    return () => {
+      // Limpiar al desmontar
+      updateUserSection('');
+    };
+  }, [updateUserSection]);
+
+  // Manejar movimiento del mouse para sincronizar cursores
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      updateCursor(e.clientX, e.clientY, 'analytics');
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    return () => document.removeEventListener('mousemove', handleMouseMove);
+  }, [updateCursor]);
+
+  // Función para manejar cambios (solo host puede ejecutar)
+  const handleTimeRangeChange = (newRange: string) => {
+    if (!canInteract) return;
+    
+    setTimeRange(newRange);
+    updateAnalytics({ timeRange: newRange, selectedMetric });
+  };
+
+  const handleMetricChange = (newMetric: string) => {
+    if (!canInteract) return;
+    
+    setSelectedMetric(newMetric);
+    updateAnalytics({ timeRange, selectedMetric: newMetric });
+  };
 
   const metrics = [
     {
@@ -104,24 +147,32 @@ const AnalyticsPage: React.FC = () => {
     { time: '20:00', inbound: 3.2, outbound: 2.9 },
   ];
 
-  const handleRefresh = async () => {
+  const handleRefreshCollaborative = async () => {
+    if (!canInteract) return;
+    
     setIsRefreshing(true);
     await new Promise(resolve => setTimeout(resolve, 2000));
     setIsRefreshing(false);
+    updateAnalytics({ action: 'refresh', timeRange, selectedMetric });
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-lg"
-    >
-      {/* Header with Controls */}
+    <div className="relative">
+      {/* Componentes colaborativos */}
+      <CollaborativeCursors currentSection="analytics" />
+      <UserPresenceIndicator currentSection="analytics" />
+      
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-card p-md"
+        className="space-y-lg"
       >
+        {/* Header with Controls */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass-card p-md"
+        >
         <div className="flex flex-col md:flex-row items-center justify-between gap-md">
           <div>
             <h1 className="text-2xl font-bold text-white mb-xs">Security Analytics</h1>
@@ -129,26 +180,34 @@ const AnalyticsPage: React.FC = () => {
           </div>
           
           <div className="flex items-center gap-sm">
-            <div className="flex items-center gap-xs glass-input px-sm py-xs rounded-md">
+            <div className={`flex items-center gap-xs glass-input px-sm py-xs rounded-md ${!canInteract ? 'opacity-60' : ''}`}>
               <Calendar className="w-4 h-4 text-gray-400" />
               <select
                 value={timeRange}
-                onChange={(e) => setTimeRange(e.target.value)}
-                className="bg-transparent text-white border-none outline-none cursor-pointer"
+                onChange={(e) => handleTimeRangeChange(e.target.value)}
+                disabled={!canInteract}
+                className={`bg-transparent text-white border-none outline-none ${canInteract ? 'cursor-pointer' : 'cursor-not-allowed'}`}
               >
                 <option value="1h" className="bg-gray-800">Last Hour</option>
                 <option value="24h" className="bg-gray-800">Last 24 Hours</option>
                 <option value="7d" className="bg-gray-800">Last 7 Days</option>
                 <option value="30d" className="bg-gray-800">Last 30 Days</option>
               </select>
+              {!canInteract && (
+                <div title="Solo host puede cambiar">
+                  <Lock className="w-3 h-3 text-orange-400 ml-1" />
+                </div>
+              )}
             </div>
             
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-              className="btn-primary px-sm py-xs rounded-md flex items-center gap-xs"
+              whileHover={canInteract ? { scale: 1.02 } : {}}
+              whileTap={canInteract ? { scale: 0.98 } : {}}
+              onClick={handleRefreshCollaborative}
+              disabled={!canInteract || isRefreshing}
+              className={`btn-primary px-sm py-xs rounded-md flex items-center gap-xs ${
+                !canInteract ? 'opacity-60 cursor-not-allowed' : ''
+              }`}
             >
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
               Refresh
@@ -399,6 +458,7 @@ const AnalyticsPage: React.FC = () => {
         })}
       </motion.div>
     </motion.div>
+    </div>
   );
 };
 
