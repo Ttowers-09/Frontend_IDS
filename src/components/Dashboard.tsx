@@ -15,11 +15,13 @@ import {
   Zap,
   Eye,
   Lock,
-  Database
+  Database,
+  Video
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import UsersPage from './UsersPage';
 import AnalyticsPage from './AnalyticsPage';
+import CallsPage from './CallsPage';
 
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -28,6 +30,7 @@ const Dashboard = () => {
     { id: 'dashboard', label: 'Dashboard', icon: Shield },
     { id: 'users', label: 'Usuarios', icon: Users },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+    { id: 'calls', label: 'Llamadas', icon: Video },
     { id: 'alerts', label: 'Alertas', icon: AlertTriangle },
     { id: 'logs', label: 'Logs', icon: FileText },
     { id: 'settings', label: 'Configuración', icon: Settings },
@@ -39,6 +42,8 @@ const Dashboard = () => {
         return <UsersPage />;
       case 'analytics':
         return <AnalyticsPage />;
+      case 'calls':
+        return <CallsPage />;
       case 'alerts':
         return <AlertsPage />;
       case 'logs':
