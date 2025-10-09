@@ -52,59 +52,63 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="flex">
-        <motion.div 
-          initial={{ x: -300 }}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+      {/* Grid Layout: Sidebar + Main Content */}
+      <div className="grid grid-cols-[256px_1fr] h-screen">
+        {/* Sidebar */}
+        <motion.aside 
+          initial={{ x: -256 }}
           animate={{ x: 0 }}
-          className="w-64 min-h-screen bg-black/20 backdrop-blur-xl border-r border-purple-500/20"
+          className="glass-card rounded-none border-r border-gray-700 flex flex-col"
         >
-          <div className="p-6">
-            <div className="flex items-center space-x-3 mb-8">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
+          {/* Logo */}
+          <div className="p-lg border-b border-gray-700">
+            <div className="flex items-center gap-sm">
+              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <h1 className="text-xl font-bold text-white">CyberShield</h1>
             </div>
-
-            <nav className="space-y-2">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <motion.button
-                    key={item.id}
-                    onClick={() => setActiveSection(item.id)}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                      activeSection === item.id
-                        ? 'bg-gradient-to-r from-purple-500/30 to-cyan-500/30 border border-purple-400/50'
-                        : 'hover:bg-white/10'
-                    }`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Icon className={`w-5 h-5 ${activeSection === item.id ? 'text-purple-300' : 'text-gray-400'}`} />
-                    <span className={`font-medium ${activeSection === item.id ? 'text-white' : 'text-gray-300'}`}>
-                      {item.label}
-                    </span>
-                  </motion.button>
-                );
-              })}
-            </nav>
           </div>
-        </motion.div>
 
-        <div className="flex-1">
-          <motion.div 
+          {/* Navigation */}
+          <nav className="flex-1 p-md space-y-sm">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <motion.button
+                  key={item.id}
+                  onClick={() => setActiveSection(item.id)}
+                  className={`w-full flex items-center gap-sm px-md py-sm rounded-md transition-all duration-normal ${
+                    activeSection === item.id
+                      ? 'bg-primary/20 border border-primary/30 text-white'
+                      : 'hover:bg-gray-700/50 text-gray-300 hover:text-white'
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="font-medium">{item.label}</span>
+                </motion.button>
+              );
+            })}
+          </nav>
+        </motion.aside>
+
+        {/* Main Content */}
+        <div className="flex flex-col">
+          {/* Header */}
+          <motion.header 
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="bg-black/20 backdrop-blur-xl border-b border-purple-500/20 p-6"
+            className="glass-card rounded-none border-b border-gray-700 p-lg"
           >
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-white mb-1">
+                <h2 className="text-2xl font-bold text-white mb-xs">
                   {navItems.find(item => item.id === activeSection)?.label || 'Dashboard'}
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-400 text-sm">
                   {activeSection === 'dashboard' && 'Centro de control de seguridad'}
                   {activeSection === 'users' && 'Gestión de usuarios y permisos'}
                   {activeSection === 'analytics' && 'Análisis y métricas de seguridad'}
@@ -113,31 +117,33 @@ const Dashboard = () => {
                   {activeSection === 'settings' && 'Configuración del sistema'}
                 </p>
               </div>
-              <div className="flex items-center space-x-4">
+              
+              <div className="flex items-center gap-md">
                 <ThemeToggle />
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Search className="absolute left-sm top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
                     type="text"
                     placeholder="Buscar..."
-                    className="w-64 pl-10 pr-4 py-2 bg-white/10 backdrop-blur-sm border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-400"
+                    className="glass-input w-64 pl-10 pr-sm py-sm rounded-md focus-ring"
                   />
                 </div>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="relative p-2 bg-white/10 backdrop-blur-sm border border-purple-500/30 rounded-lg hover:bg-white/20 transition-colors"
+                  className="relative p-sm glass-card hover:bg-gray-600/50 transition-colors"
                 >
                   <Bell className="w-5 h-5 text-gray-300" />
-                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-error rounded-full"></span>
                 </motion.button>
               </div>
             </div>
-          </motion.div>
+          </motion.header>
 
-          <div className="p-6">
+          {/* Content Area */}
+          <main className="flex-1 p-lg overflow-auto">
             {renderMainContent()}
-          </div>
+          </main>
         </div>
       </div>
     </div>
@@ -160,13 +166,29 @@ const DashboardHome = () => {
     { type: 'Tráfico Sospechoso', severity: 'low', time: '1 hour ago', source: '203.0.113.5' },
   ];
 
+  const systemServices = [
+    { service: 'Firewall', status: 'Activo', health: 'healthy' },
+    { service: 'Antivirus', status: 'Activo', health: 'healthy' },
+    { service: 'IDS/IPS', status: 'Activo', health: 'healthy' },
+    { service: 'VPN', status: 'Mantenimiento', health: 'warning' },
+    { service: 'Backup', status: 'Activo', health: 'healthy' },
+  ];
+
+  const quickActions = [
+    { label: 'Escaneo Completo', icon: Eye, color: 'bg-primary' },
+    { label: 'Bloquear IP', icon: Lock, color: 'bg-error' },
+    { label: 'Backup Manual', icon: Database, color: 'bg-success' },
+    { label: 'Generar Reporte', icon: FileText, color: 'bg-accent' },
+  ];
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-6"
+      className="space-y-lg"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
@@ -175,21 +197,21 @@ const DashboardHome = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-white/10 backdrop-blur-xl rounded-xl border border-purple-500/30 p-6 hover:bg-white/20 transition-all duration-300"
+              className="glass-card p-md space-y-sm hover:bg-gray-700/20 transition-colors"
             >
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-gradient-to-r from-purple-500/30 to-cyan-500/30 rounded-lg">
-                  <Icon className="w-6 h-6 text-purple-300" />
+              <div className="flex items-center justify-between">
+                <div className="p-sm bg-primary/20 rounded-md">
+                  <Icon className="w-5 h-5 text-primary" />
                 </div>
-                <div className={`flex items-center space-x-1 text-sm ${
-                  stat.trend === 'up' ? 'text-green-400' : 'text-red-400'
+                <div className={`flex items-center gap-xs text-sm ${
+                  stat.trend === 'up' ? 'text-success' : 'text-error'
                 }`}>
                   {stat.trend === 'up' ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                   <span>{stat.change}</span>
                 </div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
+                <div className="text-2xl font-bold text-white">{stat.value}</div>
                 <div className="text-gray-400 text-sm">{stat.label}</div>
               </div>
             </motion.div>
@@ -197,79 +219,74 @@ const DashboardHome = () => {
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg">
+        {/* Recent Threats */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white/10 backdrop-blur-xl rounded-xl border border-purple-500/30 p-6"
+          className="glass-card p-md space-y-md"
         >
-          <h3 className="text-xl font-bold text-white mb-6 flex items-center">
-            <AlertTriangle className="w-6 h-6 text-red-400 mr-3" />
+          <h3 className="text-xl font-bold text-white flex items-center gap-sm">
+            <AlertTriangle className="w-5 h-5 text-error" />
             Amenazas Recientes
           </h3>
-          <div className="space-y-4">
+          <div className="space-y-sm">
             {threats.map((threat, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + index * 0.1 }}
-                className="flex items-center justify-between p-4 bg-black/20 rounded-lg border border-purple-500/20"
+                className="flex items-center justify-between p-sm bg-gray-800/50 rounded-md border border-gray-700"
               >
-                <div className="flex items-center space-x-3">
-                  <div className={`w-3 h-3 rounded-full ${
-                    threat.severity === 'high' ? 'bg-red-500' :
-                    threat.severity === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
+                <div className="flex items-center gap-sm">
+                  <div className={`w-2 h-2 rounded-full ${
+                    threat.severity === 'high' ? 'bg-error' :
+                    threat.severity === 'medium' ? 'bg-warning' : 'bg-success'
                   }`}></div>
                   <div>
-                    <div className="text-white font-medium">{threat.type}</div>
-                    <div className="text-gray-400 text-sm">{threat.source}</div>
+                    <div className="text-white font-medium text-sm">{threat.type}</div>
+                    <div className="text-gray-400 text-xs">{threat.source}</div>
                   </div>
                 </div>
-                <div className="text-gray-400 text-sm">{threat.time}</div>
+                <div className="text-gray-400 text-xs">{threat.time}</div>
               </motion.div>
             ))}
           </div>
         </motion.div>
 
+        {/* System Status */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white/10 backdrop-blur-xl rounded-xl border border-purple-500/30 p-6"
+          className="glass-card p-md space-y-md"
         >
-          <h3 className="text-xl font-bold text-white mb-6 flex items-center">
-            <Activity className="w-6 h-6 text-green-400 mr-3" />
+          <h3 className="text-xl font-bold text-white flex items-center gap-sm">
+            <Activity className="w-5 h-5 text-success" />
             Estado del Sistema
           </h3>
-          <div className="space-y-4">
-            {[
-              { service: 'Firewall', status: 'Activo', health: 'healthy' },
-              { service: 'Antivirus', status: 'Activo', health: 'healthy' },
-              { service: 'IDS/IPS', status: 'Activo', health: 'healthy' },
-              { service: 'VPN', status: 'Mantenimiento', health: 'warning' },
-              { service: 'Backup', status: 'Activo', health: 'healthy' },
-            ].map((service, index) => (
+          <div className="space-y-sm">
+            {systemServices.map((service, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + index * 0.1 }}
-                className="flex items-center justify-between p-4 bg-black/20 rounded-lg border border-purple-500/20"
+                className="flex items-center justify-between p-sm bg-gray-800/50 rounded-md border border-gray-700"
               >
-                <div className="flex items-center space-x-3">
-                  <div className={`w-3 h-3 rounded-full ${
-                    service.health === 'healthy' ? 'bg-green-500' : 
-                    service.health === 'warning' ? 'bg-yellow-500' : 'bg-red-500'
+                <div className="flex items-center gap-sm">
+                  <div className={`w-2 h-2 rounded-full ${
+                    service.health === 'healthy' ? 'bg-success' : 
+                    service.health === 'warning' ? 'bg-warning' : 'bg-error'
                   }`}></div>
-                  <div>
-                    <div className="text-white font-medium">{service.service}</div>
-                  </div>
+                  <div className="text-white font-medium text-sm">{service.service}</div>
                 </div>
                 <div className={`text-sm font-medium ${
-                  service.health === 'healthy' ? 'text-green-400' : 
-                  service.health === 'warning' ? 'text-yellow-400' : 'text-red-400'
+                  service.health === 'healthy' ? 'text-success' : 
+                  service.health === 'warning' ? 'text-warning' : 'text-error'
                 }`}>
                   {service.status}
                 </div>
@@ -279,33 +296,29 @@ const DashboardHome = () => {
         </motion.div>
       </div>
 
+      {/* Quick Actions */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="bg-white/10 backdrop-blur-xl rounded-xl border border-purple-500/30 p-6"
+        className="glass-card p-md space-y-md"
       >
-        <h3 className="text-xl font-bold text-white mb-6 flex items-center">
-          <Zap className="w-6 h-6 text-cyan-400 mr-3" />
+        <h3 className="text-xl font-bold text-white flex items-center gap-sm">
+          <Zap className="w-5 h-5 text-accent" />
           Acciones Rápidas
         </h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { label: 'Escaneo Completo', icon: Eye, color: 'from-purple-500 to-purple-600' },
-            { label: 'Bloquear IP', icon: Lock, color: 'from-red-500 to-red-600' },
-            { label: 'Backup Manual', icon: Database, color: 'from-green-500 to-green-600' },
-            { label: 'Generar Reporte', icon: FileText, color: 'from-blue-500 to-blue-600' },
-          ].map((action, index) => {
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-sm">
+          {quickActions.map((action, index) => {
             const Icon = action.icon;
             return (
               <motion.button
                 key={index}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`flex flex-col items-center p-4 bg-gradient-to-r ${action.color} rounded-lg text-white font-medium transition-all duration-200 hover:shadow-lg hover:shadow-purple-500/25`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className={`flex flex-col items-center gap-xs p-md ${action.color} rounded-md text-white font-medium transition-all hover:opacity-90`}
               >
-                <Icon className="w-6 h-6 mb-2" />
-                <span className="text-sm">{action.label}</span>
+                <Icon className="w-5 h-5" />
+                <span className="text-sm text-center">{action.label}</span>
               </motion.button>
             );
           })}
@@ -320,9 +333,9 @@ const AlertsPage = () => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="bg-white/10 backdrop-blur-xl rounded-xl border border-purple-500/30 p-6"
+    className="glass-card p-lg space-y-md"
   >
-    <h2 className="text-2xl font-bold text-white mb-4">Alertas de Seguridad</h2>
+    <h2 className="text-2xl font-bold text-white">Alertas de Seguridad</h2>
     <p className="text-gray-400">Gestión de alertas y notificaciones del sistema.</p>
   </motion.div>
 );
@@ -331,9 +344,9 @@ const LogsPage = () => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="bg-white/10 backdrop-blur-xl rounded-xl border border-purple-500/30 p-6"
+    className="glass-card p-lg space-y-md"
   >
-    <h2 className="text-2xl font-bold text-white mb-4">Registros del Sistema</h2>
+    <h2 className="text-2xl font-bold text-white">Registros del Sistema</h2>
     <p className="text-gray-400">Visualización y análisis de logs del sistema.</p>
   </motion.div>
 );
@@ -342,9 +355,9 @@ const SettingsPage = () => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="bg-white/10 backdrop-blur-xl rounded-xl border border-purple-500/30 p-6"
+    className="glass-card p-lg space-y-md"
   >
-    <h2 className="text-2xl font-bold text-white mb-4">Configuración</h2>
+    <h2 className="text-2xl font-bold text-white">Configuración</h2>
     <p className="text-gray-400">Configuración general del sistema de seguridad.</p>
   </motion.div>
 );
