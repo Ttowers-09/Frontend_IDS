@@ -154,6 +154,25 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 )}
               </div>
             </motion.button>
+
+            {/* Demo Access Button */}
+            <motion.button
+              type="button"
+              onClick={() => {
+                setUsername('demo');
+                setPassword('demo');
+                onLogin('demo', 'demo');
+              }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full mt-3 relative overflow-hidden rounded-xl py-3 px-6 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow-glow hover:shadow-glow-lg transition-all duration-300 group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative flex items-center justify-center gap-2">
+                <Shield className="w-4 h-4" />
+                <span>Demo Access</span>
+              </div>
+            </motion.button>
           </motion.form>
 
           <motion.div 
