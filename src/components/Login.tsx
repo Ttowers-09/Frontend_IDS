@@ -45,7 +45,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             
             <div>
               <h1 className="text-2xl font-bold text-white mb-xs">
-                Fargo Security
+                ISD-IA Organization
               </h1>
               <p className="text-sm text-gray-400">
                 Advanced Cybersecurity Platform
