@@ -19,7 +19,21 @@ import {
 } from 'lucide-react';
 import CallRoom from './CallRoom';
 
-const CallsPage: React.FC = () => {
+interface CallsPageProps {
+  onJoinCall: (callId: string) => void;
+  onLeaveCall: () => void;
+  isInCall: boolean;
+  currentCallId: string;
+  onNavigateToDashboard?: () => void;
+}
+
+const CallsPage: React.FC<CallsPageProps> = ({ 
+  onJoinCall, 
+  onLeaveCall, 
+  isInCall, 
+  currentCallId,
+  onNavigateToDashboard
+}) => {
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [callName, setCallName] = useState('');
@@ -27,29 +41,26 @@ const CallsPage: React.FC = () => {
   const [selectedMicrophone, setSelectedMicrophone] = useState('default');
   const [selectedSpeaker, setSelectedSpeaker] = useState('default');
   const [generatedLink, setGeneratedLink] = useState('');
-  const [isInCall, setIsInCall] = useState(false);
-  const [currentMeetingId, setCurrentMeetingId] = useState('');
 
   const generateMeetingLink = () => {
     const meetingId = Math.random().toString(36).substring(2, 15);
     const link = `https://meet.fargo.com/room/${meetingId}`;
     setGeneratedLink(link);
-    setCurrentMeetingId(meetingId);
   };
 
   const joinMeeting = (meetingId: string) => {
-    setCurrentMeetingId(meetingId);
-    setIsInCall(true);
-  };
-
-  const leaveMeeting = () => {
-    setIsInCall(false);
-    setCurrentMeetingId('');
+    onJoinCall(meetingId);
   };
 
   // Si estamos en una llamada, mostrar CallRoom
-  if (isInCall) {
-    return <CallRoom meetingId={currentMeetingId} onLeaveCall={leaveMeeting} />;
+  if (isInCall && currentCallId) {
+    return (
+      <CallRoom 
+        meetingId={currentCallId} 
+        onLeaveCall={onLeaveCall}
+        onNavigateToDashboard={onNavigateToDashboard}
+      />
+    );
   }
 
   const copyToClipboard = (text: string) => {
@@ -114,13 +125,12 @@ const CallsPage: React.FC = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => {
-                    generateMeetingLink();
                     if (!generatedLink) {
-                      // Si se acaba de generar el link, esperar un momento antes de unirse
-                      setTimeout(() => joinMeeting(currentMeetingId), 100);
-                    } else {
-                      joinMeeting(currentMeetingId);
+                      generateMeetingLink();
                     }
+                    // Extraer el meeting ID del link generado
+                    const meetingId = generatedLink.split('/room/')[1] || Math.random().toString(36).substring(2, 15);
+                    joinMeeting(meetingId);
                   }}
                   className="btn-primary flex-1 py-sm rounded-md flex items-center justify-center gap-xs"
                 >

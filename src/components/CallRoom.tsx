@@ -20,9 +20,14 @@ import {
 interface CallRoomProps {
   meetingId?: string;
   onLeaveCall: () => void;
+  onNavigateToDashboard?: () => void;
 }
 
-const CallRoom: React.FC<CallRoomProps> = ({ meetingId = "room-123", onLeaveCall }) => {
+const CallRoom: React.FC<CallRoomProps> = ({ 
+  meetingId = "room-123", 
+  onLeaveCall,
+  onNavigateToDashboard 
+}) => {
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -323,6 +328,19 @@ const CallRoom: React.FC<CallRoomProps> = ({ meetingId = "room-123", onLeaveCall
           >
             <MoreVertical className="w-5 h-5 text-white" />
           </motion.button>
+
+          {/* Dashboard Access */}
+          {onNavigateToDashboard && (
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={onNavigateToDashboard}
+              className="p-md rounded-full bg-primary-500 hover:bg-primary-600 transition-colors"
+              title="Acceder al Dashboard"
+            >
+              <Monitor className="w-5 h-5 text-white" />
+            </motion.button>
+          )}
 
           {/* Leave Call */}
           <motion.button

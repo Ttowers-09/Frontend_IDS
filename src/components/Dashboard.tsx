@@ -18,12 +18,15 @@ import {
   Database,
   Video
 } from 'lucide-react';
-import ThemeToggle from './ThemeToggle';
 import UsersPage from './UsersPage';
 import AnalyticsPage from './AnalyticsPage';
-import CallsPage from './CallsPage';
 
-const Dashboard = () => {
+interface DashboardProps {
+  onLeaveCall: () => void;
+  callId: string;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ onLeaveCall, callId }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
 
   const navItems = [
@@ -42,8 +45,6 @@ const Dashboard = () => {
         return <UsersPage />;
       case 'analytics':
         return <AnalyticsPage />;
-      case 'calls':
-        return <CallsPage />;
       case 'alerts':
         return <AlertsPage />;
       case 'logs':
@@ -124,7 +125,20 @@ const Dashboard = () => {
               </div>
               
               <div className="flex items-center gap-md">
-                <ThemeToggle />
+                {/* Indicador de llamada activa */}
+                <div className="flex items-center gap-2 px-3 py-2 bg-green-500/20 border border-green-500/30 rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-green-300 text-sm font-medium">En llamada: {callId.substring(0, 8)}...</span>
+                  <motion.button
+                    onClick={onLeaveCall}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="ml-2 p-1 hover:bg-red-500/20 rounded text-red-400 hover:text-red-300 transition-colors"
+                  >
+                    <Shield className="w-4 h-4" />
+                  </motion.button>
+                </div>
+                
                 <div className="relative">
                   <Search className="absolute left-sm top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
