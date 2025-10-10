@@ -85,15 +85,24 @@ const CallRoom: React.FC<CallRoomProps> = ({
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between p-md glass-card rounded-none border-b border-gray-700"
+        className="flex items-center justify-between p-lg glass-card rounded-none border-b border-gray-700 bg-gradient-to-r from-gray-900/50 to-gray-800/50"
       >
-        <div className="flex items-center gap-md">
-          <div className="flex items-center gap-xs">
-            <div className="w-3 h-3 bg-success rounded-full animate-pulse" />
-            <span className="text-white font-medium">Meeting ID: {meetingId}</span>
+        <div className="flex items-center gap-lg">
+          <div className="flex items-center gap-md bg-gray-800/60 px-md py-sm rounded-lg border border-gray-600/50">
+            <div className="flex items-center gap-xs">
+              <div className="w-4 h-4 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/30" />
+              <div className="flex flex-col">
+                <span className="text-xs text-gray-400 uppercase tracking-wide font-medium">En llamada</span>
+                <span className="text-white font-bold text-lg tracking-wider">{meetingId}</span>
+              </div>
+            </div>
           </div>
-          <div className="text-gray-400 text-sm">
-            Duration: {formatDuration(callDuration)}
+          <div className="flex items-center gap-xs bg-gray-800/40 px-md py-sm rounded-lg border border-gray-600/30">
+            <div className="w-3 h-3 bg-blue-500 rounded-full" />
+            <div className="flex flex-col">
+              <span className="text-xs text-gray-400 uppercase tracking-wide font-medium">Duración</span>
+              <span className="text-white font-semibold text-sm">{formatDuration(callDuration)}</span>
+            </div>
           </div>
         </div>
 

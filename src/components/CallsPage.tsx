@@ -17,7 +17,8 @@ import {
   Monitor,
   Headphones,
   Camera,
-  Volume2
+  Volume2,
+  Activity
 } from 'lucide-react';
 import CallRoom from './CallRoom';
 
@@ -80,13 +81,13 @@ const CallsPage: React.FC<CallsPageProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-md min-h-screen p-md"
+      className="space-y-lg min-h-screen p-lg"
     >
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-card p-md"
+        className="glass-card p-lg"
       >
         <div className="flex items-center justify-between">
                     <div>
@@ -108,9 +109,9 @@ const CallsPage: React.FC<CallsPageProps> = ({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="glass-card p-md"
+        className="glass-card p-lg space-y-md"
       >
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-md">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
           <div className="text-center">
             <div className="text-2xl font-bold text-green-400">
               {currentUser?.isHost ? '12' : '3'}
@@ -143,7 +144,7 @@ const CallsPage: React.FC<CallsPageProps> = ({
       </motion.div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 gap-md">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg">
         {currentUser?.isHost ? (
           <>
             {/* Admin Section - Create Meetings */}
@@ -151,10 +152,10 @@ const CallsPage: React.FC<CallsPageProps> = ({
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
-              className="space-y-md xl:col-span-2"
+              className="space-y-lg"
             >
             {/* New Meeting Card */}
-            <div className="glass-card p-md space-y-md">
+            <div className="glass-card p-lg space-y-md">
               <h2 className="text-xl font-bold text-white flex items-center gap-xs">
                 <Play className="w-5 h-5 text-primary" />
                 Create New Meeting
@@ -162,7 +163,7 @@ const CallsPage: React.FC<CallsPageProps> = ({
               </h2>
             
             <div className="space-y-sm">
-              <div className="flex gap-sm">
+              <div className="flex flex-col sm:flex-row gap-sm">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -183,7 +184,7 @@ const CallsPage: React.FC<CallsPageProps> = ({
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="btn-secondary px-sm py-xs rounded-md flex items-center gap-xs"
+                  className="btn-secondary px-sm py-sm rounded-md flex items-center justify-center gap-xs sm:w-auto"
                 >
                   <Calendar className="w-4 h-4" />
                   Schedule
@@ -201,27 +202,29 @@ const CallsPage: React.FC<CallsPageProps> = ({
                 <label className="block text-sm font-medium text-gray-300">
                   Meeting Link
                 </label>
-                <div className="flex gap-xs">
+                <div className="flex flex-col sm:flex-row gap-xs">
                   <input
                     type="text"
                     value={generatedLink}
                     readOnly
-                    className="glass-input flex-1 px-sm py-xs rounded-md text-gray-300"
+                    className="glass-input flex-1 px-sm py-sm rounded-md text-gray-300 w-full sm:min-w-0"
                   />
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => copyToClipboard(generatedLink)}
-                    className="btn-secondary px-sm py-xs rounded-md"
+                    className="btn-secondary px-sm py-sm rounded-md flex items-center justify-center gap-xs sm:w-auto"
                   >
                     <Copy className="w-4 h-4" />
+                    <span className="sm:hidden">Copiar</span>
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="btn-accent px-sm py-xs rounded-md"
+                    className="btn-accent px-sm py-sm rounded-md flex items-center justify-center gap-xs sm:w-auto"
                   >
                     <Share2 className="w-4 h-4" />
+                    <span className="sm:hidden">Compartir</span>
                   </motion.button>
                 </div>
               </motion.div>
@@ -229,10 +232,10 @@ const CallsPage: React.FC<CallsPageProps> = ({
           </div>
 
           {/* Quick Actions */}
-          <div className="glass-card p-md space-y-md">
-            <h3 className="text-lg font-medium text-white">Quick Actions</h3>
+          <div className="glass-card p-lg space-y-md">
+            <h3 className="text-xl font-bold text-white">Quick Actions</h3>
             
-            <div className="grid grid-cols-2 gap-sm">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-sm">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -240,13 +243,10 @@ const CallsPage: React.FC<CallsPageProps> = ({
                   const meetingId = prompt('Enter Meeting ID:');
                   if (meetingId) joinMeeting(meetingId);
                 }}
-                className="glass-input p-sm rounded-md text-left space-y-xs hover:bg-white/10 transition-colors"
+                className="flex flex-col items-center gap-xs p-lg bg-primary rounded-md text-white font-medium transition-all hover:opacity-90"
               >
-                <Users className="w-5 h-5 text-primary" />
-                <div>
-                  <div className="text-white font-medium text-sm">Join Meeting</div>
-                  <div className="text-gray-400 text-xs">Enter meeting ID</div>
-                </div>
+                <Users className="w-5 h-5" />
+                <span className="text-sm text-center">Join Meeting</span>
               </motion.button>
 
               <motion.button
@@ -256,13 +256,29 @@ const CallsPage: React.FC<CallsPageProps> = ({
                   const instantMeetingId = Math.random().toString(36).substring(2, 15);
                   joinMeeting(instantMeetingId);
                 }}
-                className="glass-input p-sm rounded-md text-left space-y-xs hover:bg-white/10 transition-colors"
+                className="flex flex-col items-center gap-xs p-lg bg-accent rounded-md text-white font-medium transition-all hover:opacity-90"
               >
-                <Clock className="w-5 h-5 text-accent" />
-                <div>
-                  <div className="text-white font-medium text-sm">Instant Meeting</div>
-                  <div className="text-gray-400 text-xs">Start immediately</div>
-                </div>
+                <Clock className="w-5 h-5" />
+                <span className="text-sm text-center">Instant Meeting</span>
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={generateMeetingLink}
+                className="flex flex-col items-center gap-xs p-lg bg-success rounded-md text-white font-medium transition-all hover:opacity-90"
+              >
+                <Calendar className="w-5 h-5" />
+                <span className="text-sm text-center">Schedule</span>
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex flex-col items-center gap-xs p-lg bg-gray-600 rounded-md text-white font-medium transition-all hover:opacity-90"
+              >
+                <Settings className="w-5 h-5" />
+                <span className="text-sm text-center">Settings</span>
               </motion.button>
             </div>
           </div>
@@ -273,40 +289,103 @@ const CallsPage: React.FC<CallsPageProps> = ({
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="space-y-md"
+              className="space-y-lg"
             >
-              <div className="glass-card p-md space-y-md">
-                <h3 className="text-lg font-medium text-white flex items-center gap-xs">
+              <div className="glass-card p-lg space-y-md">
+                <h3 className="text-xl font-bold text-white flex items-center gap-sm">
                   <Shield className="w-5 h-5 text-yellow-400" />
                   Admin Control Panel
                 </h3>
-                <div className="grid grid-cols-2 gap-sm">
-                  <div className="glass-input p-sm rounded-md text-center">
-                    <div className="text-2xl font-bold text-primary">12</div>
-                    <div className="text-xs text-gray-400">Active Meetings</div>
-                  </div>
-                  <div className="glass-input p-sm rounded-md text-center">
-                    <div className="text-2xl font-bold text-accent">48</div>
-                    <div className="text-xs text-gray-400">Total Participants</div>
-                  </div>
-                  <div className="glass-input p-sm rounded-md text-center">
-                    <div className="text-2xl font-bold text-green-400">98%</div>
-                    <div className="text-xs text-gray-400">Uptime</div>
-                  </div>
-                  <div className="glass-input p-sm rounded-md text-center">
-                    <div className="text-2xl font-bold text-blue-400">256</div>
-                    <div className="text-xs text-gray-400">Total Users</div>
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="glass-card p-md space-y-sm hover:bg-gray-700/20 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="p-sm bg-primary/20 rounded-md">
+                        <Video className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="flex items-center gap-xs text-sm text-success">
+                        <span>+12%</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-white">12</div>
+                      <div className="text-gray-400 text-sm">Active Meetings</div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="glass-card p-md space-y-sm hover:bg-gray-700/20 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="p-sm bg-accent/20 rounded-md">
+                        <Users className="w-5 h-5 text-accent" />
+                      </div>
+                      <div className="flex items-center gap-xs text-sm text-success">
+                        <span>+5%</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-white">48</div>
+                      <div className="text-gray-400 text-sm">Total Participants</div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="glass-card p-md space-y-sm hover:bg-gray-700/20 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="p-sm bg-success/20 rounded-md">
+                        <Activity className="w-5 h-5 text-success" />
+                      </div>
+                      <div className="flex items-center gap-xs text-sm text-success">
+                        <span>+0.1%</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-white">98%</div>
+                      <div className="text-gray-400 text-sm">System Uptime</div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="glass-card p-md space-y-sm hover:bg-gray-700/20 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="p-sm bg-blue-500/20 rounded-md">
+                        <Users className="w-5 h-5 text-blue-400" />
+                      </div>
+                      <div className="flex items-center gap-xs text-sm text-success">
+                        <span>+15%</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-white">256</div>
+                      <div className="text-gray-400 text-sm">Total Users</div>
+                    </div>
+                  </motion.div>
                 </div>
               </div>
 
-              <div className="glass-card p-md space-y-md">
-                <h3 className="text-lg font-medium text-white">Quick Admin Actions</h3>
+              <div className="glass-card p-lg space-y-md">
+                <h3 className="text-xl font-bold text-white">Quick Admin Actions</h3>
                 <div className="space-y-sm">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full glass-input p-sm rounded-md text-left hover:bg-white/10 transition-colors"
+                    className="w-full glass-input p-md rounded-md text-left hover:bg-white/10 transition-colors"
                   >
                     <div className="flex items-center gap-sm">
                       <Users className="w-4 h-4 text-blue-400" />
@@ -316,7 +395,7 @@ const CallsPage: React.FC<CallsPageProps> = ({
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full glass-input p-sm rounded-md text-left hover:bg-white/10 transition-colors"
+                    className="w-full glass-input p-md rounded-md text-left hover:bg-white/10 transition-colors"
                   >
                     <div className="flex items-center gap-sm">
                       <Settings className="w-4 h-4 text-gray-400" />
@@ -335,10 +414,10 @@ const CallsPage: React.FC<CallsPageProps> = ({
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
-              className="space-y-md xl:col-span-2"
+              className="space-y-lg"
             >
             {/* Join Meeting Card */}
-            <div className="glass-card p-md space-y-md">
+            <div className="glass-card p-lg space-y-md">
               <h2 className="text-xl font-bold text-white flex items-center gap-xs">
                 <Users className="w-5 h-5 text-blue-400" />
                 Join Meeting
@@ -350,24 +429,7 @@ const CallsPage: React.FC<CallsPageProps> = ({
               </p>
               
               <div className="space-y-sm">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-xs">
-                    Meeting ID
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter meeting ID..."
-                    className="glass-input w-full px-sm py-xs rounded-md focus-ring"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        const meetingId = (e.target as HTMLInputElement).value;
-                        if (meetingId) joinMeeting(meetingId);
-                      }
-                    }}
-                  />
-                </div>
-
-                <div className="flex gap-sm">
+                <div className="flex flex-col sm:flex-row gap-sm">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -375,9 +437,9 @@ const CallsPage: React.FC<CallsPageProps> = ({
                       const meetingId = prompt('Enter Meeting ID:');
                       if (meetingId) joinMeeting(meetingId);
                     }}
-                    className="btn-primary flex-1 py-sm rounded-md flex items-center justify-center gap-xs"
+                    className="btn-primary flex-1 py-lg rounded-md flex items-center justify-center gap-xs text-lg font-medium"
                   >
-                    <Video className="w-4 h-4" />
+                    <Video className="w-5 h-5" />
                     Join Meeting
                   </motion.button>
                 </div>
@@ -385,8 +447,8 @@ const CallsPage: React.FC<CallsPageProps> = ({
             </div>
 
             {/* Quick Join */}
-            <div className="glass-card p-md space-y-md">
-              <h3 className="text-lg font-medium text-white">Quick Join</h3>
+            <div className="glass-card p-lg space-y-md">
+              <h3 className="text-xl font-bold text-white">Quick Join</h3>
               
               <div className="grid grid-cols-1 gap-sm">
                 <motion.button
@@ -396,7 +458,7 @@ const CallsPage: React.FC<CallsPageProps> = ({
                     const meetingId = prompt('Enter Meeting ID:');
                     if (meetingId) joinMeeting(meetingId);
                   }}
-                  className="glass-input p-sm rounded-md text-left space-y-xs hover:bg-white/10 transition-colors"
+                  className="glass-input p-md rounded-md text-left space-y-xs hover:bg-white/10 transition-colors w-full"
                 >
                   <Users className="w-5 h-5 text-primary" />
                   <div>
@@ -413,10 +475,10 @@ const CallsPage: React.FC<CallsPageProps> = ({
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="space-y-md"
+              className="space-y-lg"
             >
-              <div className="glass-card p-md space-y-md">
-                <h3 className="text-lg font-medium text-white flex items-center gap-xs">
+              <div className="glass-card p-lg space-y-md">
+                <h3 className="text-xl font-bold text-white flex items-center gap-sm">
                   <Users className="w-5 h-5 text-blue-400" />
                   Participant Guide
                 </h3>
@@ -427,19 +489,19 @@ const CallsPage: React.FC<CallsPageProps> = ({
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="text-blue-400 font-bold">2.</span>
-                    <span>Enter ID in the field above</span>
+                    <span>Click "Join Meeting" button</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="text-blue-400 font-bold">3.</span>
-                    <span>Click "Join Meeting" to participate</span>
+                    <span>Enter ID when prompted to join</span>
                   </div>
                 </div>
               </div>
 
-              <div className="glass-card p-md space-y-md">
-                <h3 className="text-lg font-medium text-white">Recent Activity</h3>
+              <div className="glass-card p-lg space-y-md">
+                <h3 className="text-xl font-bold text-white">Recent Activity</h3>
                 <div className="space-y-sm">
-                  <div className="glass-input p-sm rounded-md">
+                  <div className="glass-input p-md rounded-md">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-white text-sm font-medium">Team Meeting</div>
@@ -448,7 +510,7 @@ const CallsPage: React.FC<CallsPageProps> = ({
                       <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     </div>
                   </div>
-                  <div className="glass-input p-sm rounded-md">
+                  <div className="glass-input p-md rounded-md">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-white text-sm font-medium">Project Review</div>
@@ -544,7 +606,7 @@ const CallsPage: React.FC<CallsPageProps> = ({
                 <select
                   value={selectedCamera}
                   onChange={(e) => setSelectedCamera(e.target.value)}
-                  className="glass-input w-full px-sm py-xs rounded-md focus-ring bg-transparent"
+                  className="glass-input w-full px-sm py-sm rounded-md focus-ring bg-transparent"
                 >
                   <option value="default" className="bg-gray-800">Default Camera</option>
                   <option value="front" className="bg-gray-800">Front Camera</option>
@@ -561,7 +623,7 @@ const CallsPage: React.FC<CallsPageProps> = ({
                 <select
                   value={selectedMicrophone}
                   onChange={(e) => setSelectedMicrophone(e.target.value)}
-                  className="glass-input w-full px-sm py-xs rounded-md focus-ring bg-transparent"
+                  className="glass-input w-full px-sm py-sm rounded-md focus-ring bg-transparent"
                 >
                   <option value="default" className="bg-gray-800">Default Microphone</option>
                   <option value="headset" className="bg-gray-800">Headset Microphone</option>
