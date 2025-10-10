@@ -1,3 +1,4 @@
+// ROLE-BASED RESTRICTIONS IMPLEMENTED
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -79,7 +80,7 @@ const CallsPage: React.FC<CallsPageProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-lg"
+      className="space-y-md min-h-screen p-md"
     >
       {/* Header */}
       <motion.div
@@ -88,9 +89,13 @@ const CallsPage: React.FC<CallsPageProps> = ({
         className="glass-card p-md"
       >
         <div className="flex items-center justify-between">
-          <div>
+                    <div>
             <h1 className="text-2xl font-bold text-white mb-xs">Video Calls</h1>
-            <p className="text-gray-400">Create and manage secure video meetings</p>
+            <p className="text-gray-400">
+              {currentUser?.isHost 
+                ? "Create and manage secure video meetings [ADMIN ACCESS]" 
+                : "Join secure video meetings [PARTICIPANT ACCESS]"}
+            </p>
           </div>
           <div className="bg-primary p-sm rounded-md">
             <Video className="w-6 h-6 text-white" />
@@ -98,20 +103,63 @@ const CallsPage: React.FC<CallsPageProps> = ({
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg">
-        {/* Create Call Section */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.1 }}
-          className="space-y-md"
-        >
-          {/* New Meeting Card */}
-          <div className="glass-card p-md space-y-md">
-            <h2 className="text-xl font-bold text-white flex items-center gap-xs">
-              <Play className="w-5 h-5 text-primary" />
-              Create New Meeting
-            </h2>
+      {/* Live Stats Bar */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="glass-card p-md"
+      >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-md">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-green-400">
+              {currentUser?.isHost ? '12' : '3'}
+            </div>
+            <div className="text-xs text-gray-400">
+              {currentUser?.isHost ? 'Active Meetings' : 'Available Meetings'}
+            </div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-blue-400">
+              {currentUser?.isHost ? '48' : '5'}
+            </div>
+            <div className="text-xs text-gray-400">
+              {currentUser?.isHost ? 'Total Users' : 'Joined Today'}
+            </div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-purple-400">
+              {currentUser?.isHost ? '256' : '2.5h'}
+            </div>
+            <div className="text-xs text-gray-400">
+              {currentUser?.isHost ? 'This Month' : 'Meeting Time'}
+            </div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-yellow-400">98%</div>
+            <div className="text-xs text-gray-400">System Uptime</div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 gap-md">
+        {currentUser?.isHost ? (
+          <>
+            {/* Admin Section - Create Meetings */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 }}
+              className="space-y-md xl:col-span-2"
+            >
+            {/* New Meeting Card */}
+            <div className="glass-card p-md space-y-md">
+              <h2 className="text-xl font-bold text-white flex items-center gap-xs">
+                <Play className="w-5 h-5 text-primary" />
+                🔒 Create New Meeting [ADMIN ONLY]
+                <span className="ml-2 px-2 py-1 bg-yellow-500/20 text-yellow-300 text-xs rounded-full font-bold">👑 ADMIN</span>
+              </h2>
             
             <div className="space-y-sm">
               <div>
@@ -231,7 +279,201 @@ const CallsPage: React.FC<CallsPageProps> = ({
               </motion.button>
             </div>
           </div>
-        </motion.div>
+            </motion.div>
+
+            {/* Admin Quick Stats */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+              className="space-y-md"
+            >
+              <div className="glass-card p-md space-y-md">
+                <h3 className="text-lg font-medium text-white flex items-center gap-xs">
+                  👑 Admin Control Panel
+                </h3>
+                <div className="grid grid-cols-2 gap-sm">
+                  <div className="glass-input p-sm rounded-md text-center">
+                    <div className="text-2xl font-bold text-primary">12</div>
+                    <div className="text-xs text-gray-400">Active Meetings</div>
+                  </div>
+                  <div className="glass-input p-sm rounded-md text-center">
+                    <div className="text-2xl font-bold text-accent">48</div>
+                    <div className="text-xs text-gray-400">Total Participants</div>
+                  </div>
+                  <div className="glass-input p-sm rounded-md text-center">
+                    <div className="text-2xl font-bold text-green-400">98%</div>
+                    <div className="text-xs text-gray-400">Uptime</div>
+                  </div>
+                  <div className="glass-input p-sm rounded-md text-center">
+                    <div className="text-2xl font-bold text-blue-400">256</div>
+                    <div className="text-xs text-gray-400">Total Users</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="glass-card p-md space-y-md">
+                <h3 className="text-lg font-medium text-white">Quick Admin Actions</h3>
+                <div className="space-y-sm">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full glass-input p-sm rounded-md text-left hover:bg-white/10 transition-colors"
+                  >
+                    <div className="flex items-center gap-sm">
+                      <Users className="w-4 h-4 text-blue-400" />
+                      <span className="text-white text-sm">Manage Users</span>
+                    </div>
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full glass-input p-sm rounded-md text-left hover:bg-white/10 transition-colors"
+                  >
+                    <div className="flex items-center gap-sm">
+                      <Settings className="w-4 h-4 text-gray-400" />
+                      <span className="text-white text-sm">System Settings</span>
+                    </div>
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        ) : (
+          /* Join Only Section - Para Participantes */
+          <>
+            {/* Participant Section - Join Meetings */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 }}
+              className="space-y-md xl:col-span-2"
+            >
+          >
+            {/* Join Meeting Card */}
+            <div className="glass-card p-md space-y-md">
+              <h2 className="text-xl font-bold text-white flex items-center gap-xs">
+                <Users className="w-5 h-5 text-blue-400" />
+                🔓 Join Meeting [PARTICIPANT ACCESS]
+                <span className="ml-2 px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full font-bold">👤 PARTICIPANT</span>
+              </h2>
+              
+              <p className="text-gray-400 text-sm">
+                ⚠️ RESTRICTED: You can only join existing meetings created by administrators. You cannot create new meetings.
+              </p>
+              
+              <div className="space-y-sm">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-xs">
+                    Meeting ID
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter meeting ID..."
+                    className="glass-input w-full px-sm py-xs rounded-md focus-ring"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        const meetingId = (e.target as HTMLInputElement).value;
+                        if (meetingId) joinMeeting(meetingId);
+                      }
+                    }}
+                  />
+                </div>
+
+                <div className="flex gap-sm">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      const meetingId = prompt('Enter Meeting ID:');
+                      if (meetingId) joinMeeting(meetingId);
+                    }}
+                    className="btn-primary flex-1 py-sm rounded-md flex items-center justify-center gap-xs"
+                  >
+                    <Video className="w-4 h-4" />
+                    Join Meeting
+                  </motion.button>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Join */}
+            <div className="glass-card p-md space-y-md">
+              <h3 className="text-lg font-medium text-white">Quick Join</h3>
+              
+              <div className="grid grid-cols-1 gap-sm">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    const meetingId = prompt('Enter Meeting ID:');
+                    if (meetingId) joinMeeting(meetingId);
+                  }}
+                  className="glass-input p-sm rounded-md text-left space-y-xs hover:bg-white/10 transition-colors"
+                >
+                  <Users className="w-5 h-5 text-primary" />
+                  <div>
+                    <div className="text-white font-medium text-sm">Join with ID</div>
+                    <div className="text-gray-400 text-xs">Enter meeting ID to join</div>
+                  </div>
+                </motion.button>
+              </div>
+            </div>
+            </motion.div>
+
+            {/* Participant Info Panel */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+              className="space-y-md"
+            >
+              <div className="glass-card p-md space-y-md">
+                <h3 className="text-lg font-medium text-white flex items-center gap-xs">
+                  👤 Participant Guide
+                </h3>
+                <div className="space-y-sm text-sm text-gray-300">
+                  <div className="flex items-start gap-2">
+                    <span className="text-blue-400 font-bold">1.</span>
+                    <span>Get meeting ID from administrator</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-blue-400 font-bold">2.</span>
+                    <span>Enter ID in the field above</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-blue-400 font-bold">3.</span>
+                    <span>Click "Join Meeting" to participate</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="glass-card p-md space-y-md">
+                <h3 className="text-lg font-medium text-white">Recent Activity</h3>
+                <div className="space-y-sm">
+                  <div className="glass-input p-sm rounded-md">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-white text-sm font-medium">Team Meeting</div>
+                        <div className="text-gray-400 text-xs">Joined 2 hours ago</div>
+                      </div>
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    </div>
+                  </div>
+                  <div className="glass-input p-sm rounded-md">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-white text-sm font-medium">Project Review</div>
+                        <div className="text-gray-400 text-xs">Joined yesterday</div>
+                      </div>
+                      <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
 
         {/* Settings Section */}
         <motion.div
