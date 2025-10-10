@@ -9,7 +9,6 @@ import {
   AlertTriangle,
   Download,
   Calendar,
-  Filter,
   RefreshCw,
   Eye,
   Users,
@@ -18,8 +17,7 @@ import {
   Clock,
   PieChart,
   LineChart,
-  Lock,
-  Unlock
+  Lock
 } from 'lucide-react';
 import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart as RechartsPieChart, Pie, Cell } from 'recharts';
 import { useCollaboration } from '../contexts/CollaborationContext';
@@ -60,13 +58,6 @@ const AnalyticsPage: React.FC = () => {
     
     setTimeRange(newRange);
     updateAnalytics({ timeRange: newRange, selectedMetric });
-  };
-
-  const handleMetricChange = (newMetric: string) => {
-    if (!canInteract) return;
-    
-    setSelectedMetric(newMetric);
-    updateAnalytics({ timeRange, selectedMetric: newMetric });
   };
 
   const metrics = [

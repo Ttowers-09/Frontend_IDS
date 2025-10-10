@@ -13,6 +13,7 @@ import {
   Copy,
   Share2,
   Play,
+  Shield,
   Monitor,
   Headphones,
   Camera,
@@ -43,7 +44,6 @@ const CallsPage: React.FC<CallsPageProps> = ({
 }) => {
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
-  const [callName, setCallName] = useState('');
   const [selectedCamera, setSelectedCamera] = useState('default');
   const [selectedMicrophone, setSelectedMicrophone] = useState('default');
   const [selectedSpeaker, setSelectedSpeaker] = useState('default');
@@ -93,8 +93,8 @@ const CallsPage: React.FC<CallsPageProps> = ({
             <h1 className="text-2xl font-bold text-white mb-xs">Video Calls</h1>
             <p className="text-gray-400">
               {currentUser?.isHost 
-                ? "Create and manage secure video meetings [ADMIN ACCESS]" 
-                : "Join secure video meetings [PARTICIPANT ACCESS]"}
+                ? "Create and manage secure video meetings" 
+                : "Join secure video meetings"}
             </p>
           </div>
           <div className="bg-primary p-sm rounded-md">
@@ -157,24 +157,11 @@ const CallsPage: React.FC<CallsPageProps> = ({
             <div className="glass-card p-md space-y-md">
               <h2 className="text-xl font-bold text-white flex items-center gap-xs">
                 <Play className="w-5 h-5 text-primary" />
-                🔒 Create New Meeting [ADMIN ONLY]
-                <span className="ml-2 px-2 py-1 bg-yellow-500/20 text-yellow-300 text-xs rounded-full font-bold">👑 ADMIN</span>
+                Create New Meeting
+                <span className="ml-2 px-2 py-1 bg-yellow-500/20 text-yellow-300 text-xs rounded-full font-bold">ADMIN</span>
               </h2>
             
             <div className="space-y-sm">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-xs">
-                  Meeting Name (Optional)
-                </label>
-                <input
-                  type="text"
-                  value={callName}
-                  onChange={(e) => setCallName(e.target.value)}
-                  placeholder="Enter meeting name..."
-                  className="glass-input w-full px-sm py-xs rounded-md focus-ring"
-                />
-              </div>
-
               <div className="flex gap-sm">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -274,7 +261,7 @@ const CallsPage: React.FC<CallsPageProps> = ({
                 <Clock className="w-5 h-5 text-accent" />
                 <div>
                   <div className="text-white font-medium text-sm">Instant Meeting</div>
-                  <div className="text-gray-400 text-xs">Start right now</div>
+                  <div className="text-gray-400 text-xs">Start immediately</div>
                 </div>
               </motion.button>
             </div>
@@ -290,7 +277,8 @@ const CallsPage: React.FC<CallsPageProps> = ({
             >
               <div className="glass-card p-md space-y-md">
                 <h3 className="text-lg font-medium text-white flex items-center gap-xs">
-                  👑 Admin Control Panel
+                  <Shield className="w-5 h-5 text-yellow-400" />
+                  Admin Control Panel
                 </h3>
                 <div className="grid grid-cols-2 gap-sm">
                   <div className="glass-input p-sm rounded-md text-center">
@@ -349,17 +337,16 @@ const CallsPage: React.FC<CallsPageProps> = ({
               transition={{ delay: 0.1 }}
               className="space-y-md xl:col-span-2"
             >
-          >
             {/* Join Meeting Card */}
             <div className="glass-card p-md space-y-md">
               <h2 className="text-xl font-bold text-white flex items-center gap-xs">
                 <Users className="w-5 h-5 text-blue-400" />
-                🔓 Join Meeting [PARTICIPANT ACCESS]
-                <span className="ml-2 px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full font-bold">👤 PARTICIPANT</span>
+                Join Meeting
+                <span className="ml-2 px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full font-bold">PARTICIPANT</span>
               </h2>
               
               <p className="text-gray-400 text-sm">
-                ⚠️ RESTRICTED: You can only join existing meetings created by administrators. You cannot create new meetings.
+                RESTRICTED: You can only join existing meetings created by administrators. You cannot create new meetings.
               </p>
               
               <div className="space-y-sm">
@@ -430,7 +417,8 @@ const CallsPage: React.FC<CallsPageProps> = ({
             >
               <div className="glass-card p-md space-y-md">
                 <h3 className="text-lg font-medium text-white flex items-center gap-xs">
-                  👤 Participant Guide
+                  <Users className="w-5 h-5 text-blue-400" />
+                  Participant Guide
                 </h3>
                 <div className="space-y-sm text-sm text-gray-300">
                   <div className="flex items-start gap-2">
