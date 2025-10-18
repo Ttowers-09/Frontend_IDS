@@ -5,12 +5,18 @@ import { CollaborationProvider } from './contexts/CollaborationContext';
 import Login from './components/Login';
 import CallsPage from './components/CallsPage';
 import Dashboard from './components/Dashboard';
+import AuthCallback from './components/AuthCallback';
+import { authUtils } from './utils/auth';
 
 function AppContent() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => authUtils.isAuthenticated());
   const [isInCall, setIsInCall] = useState(false);
   const [currentCallId, setCurrentCallId] = useState('');
-  const [currentUser, setCurrentUser] = useState<{id: string, name: string, isHost: boolean} | null>(null);
+  const [currentUser, setCurrentUser] = useState<{id: string, name: string, isHost: boolean} | null>(() => {
+    const u = authUtils.getUserInfo();
+    if (u) return { id: u.id || `user-${Date.now()}`, name: u.name || u.email || 'User', isHost: false };
+    return null;
+  });
   const navigate = useNavigate();
 
   const handleLogin = (username: string, password: string) => {
@@ -25,6 +31,8 @@ function AppContent() {
       });
     }
   };
+
+  // auth state is initialized from authUtils at mount via useState initializers
 
   const handleJoinCall = (callId: string) => {
     setIsInCall(true);
@@ -48,6 +56,7 @@ function AppContent() {
   return (
     <div className="App">
       <Routes>
+        <Route path="/auth/success" element={<AuthCallback />} />
         <Route 
           path="/login" 
           element={
